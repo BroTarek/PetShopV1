@@ -1,0 +1,1 @@
+getAllPetsOfUser(string userId);
