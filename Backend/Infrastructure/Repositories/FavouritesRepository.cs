@@ -17,6 +17,7 @@ public class FavouriteRepository : IFavouriteRepository
     public async Task<Favourite> CreateAsync(Favourite favourite)
     {
         await _context.Favourites.AddAsync(favourite);
+        await _context.SaveChangesAsync();
         return favourite;
     }
 
@@ -35,13 +36,14 @@ public class FavouriteRepository : IFavouriteRepository
         if (favourite != null)
         {
             _context.Favourites.Remove(favourite);
+            await _context.SaveChangesAsync();
         }
     }
 
     public async Task UpdateAsync(Favourite favourite)
     {
         _context.Favourites.Update(favourite);
-        await Task.CompletedTask;
+        await _context.SaveChangesAsync();
     }
 
     public async Task<List<Favourite>> GetFavouritesByUserIdAsync(string userId)
@@ -94,6 +96,7 @@ public class FavouriteRepository : IFavouriteRepository
             .ToListAsync();
         
         _context.Favourites.RemoveRange(favourites);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAllByPostIdAsync(string postId)
@@ -103,6 +106,7 @@ public class FavouriteRepository : IFavouriteRepository
             .ToListAsync();
         
         _context.Favourites.RemoveRange(favourites);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<List<Favourite>> GetFavouritesWithIncludesAsync(string userId)

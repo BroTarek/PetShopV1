@@ -20,6 +20,7 @@ public class PetRepository : IPetRepository
         pet.CreationDate = DateTime.UtcNow;
         pet.LastModified = DateTime.UtcNow;
         await _context.Pets.AddAsync(pet);
+        await _context.SaveChangesAsync();
         return pet;
     }
 
@@ -35,7 +36,7 @@ public class PetRepository : IPetRepository
     {
         pet.LastModified = DateTime.UtcNow;
         _context.Pets.Update(pet);
-        await Task.CompletedTask;
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(string id)
@@ -44,6 +45,7 @@ public class PetRepository : IPetRepository
         if (pet != null)
         {
             _context.Pets.Remove(pet);
+            await _context.SaveChangesAsync();
         }
     }
 

@@ -19,6 +19,7 @@ public class ReviewRepository : IReviewRepository
         review.CreatedAt = DateTime.UtcNow;
         review.ModificationDate = DateTime.UtcNow;
         await _context.Reviews.AddAsync(review);
+        await _context.SaveChangesAsync();
         return review;
     }
 
@@ -34,7 +35,7 @@ public class ReviewRepository : IReviewRepository
     {
         review.ModificationDate = DateTime.UtcNow;
         _context.Reviews.Update(review);
-        await Task.CompletedTask;
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(string id)
@@ -43,6 +44,7 @@ public class ReviewRepository : IReviewRepository
         if (review != null)
         {
             _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
         }
     }
 
@@ -95,6 +97,7 @@ public class ReviewRepository : IReviewRepository
             .ToListAsync();
         
         _context.Reviews.RemoveRange(reviews);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAllReviewsForUserAsync(string userId)
@@ -104,6 +107,7 @@ public class ReviewRepository : IReviewRepository
             .ToListAsync();
         
         _context.Reviews.RemoveRange(reviews);
+        await _context.SaveChangesAsync();
     }
     
     public async Task<double> GetAverageRatingForUserAsync(string userId)

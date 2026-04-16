@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using PetShop.BackendV2.Application;
@@ -46,7 +47,30 @@ builder.Services.AddCors(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    // Define the OAuth2.0 / Bearer scheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    // Make Swagger use the defined scheme globally
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            new string[] {}
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -55,6 +79,27 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.EnsureCreated();
+    
+    // Auto-seed default Super Admin
+    var adminEmail = "metarek257@gmail.com";
+    if (!dbContext.Users.Any(u => u.Email == adminEmail))
+    {
+        var adminUser = new PetShop.BackendV2.Domain.Entities.User
+        {
+            Id = Guid.NewGuid().ToString(),
+            FirstName = "Tarek",
+            LastName = "Dibba",
+            Email = adminEmail,
+            Password = BCrypt.Net.BCrypt.HashPassword("oneiron9075"),
+            Role = PetShop.BackendV2.Domain.Enums.Role.Admin,
+            AccountStatus = PetShop.BackendV2.Domain.Enums.AccountStatus.Approved,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        dbContext.Users.Add(adminUser);
+        dbContext.SaveChanges();
+        Console.WriteLine("Successfully seeded initial Admin user.");
+    }
 }
 
 // Configure the HTTP request pipeline.

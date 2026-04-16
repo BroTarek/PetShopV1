@@ -19,6 +19,7 @@ public class UserRepository : IUserRepository
     public async Task<User> CreateAsync(User user)
     {
         await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
         return user;
     }
 
@@ -37,7 +38,7 @@ public class UserRepository : IUserRepository
     public async Task UpdateAsync(User user)
     {
         _context.Users.Update(user);
-        await Task.CompletedTask;
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(string id)
@@ -46,6 +47,7 @@ public class UserRepository : IUserRepository
         if (user != null)
         {
             _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
         }
     }
 

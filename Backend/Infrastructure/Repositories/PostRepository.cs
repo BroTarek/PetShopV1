@@ -17,6 +17,7 @@ public class PostRepository : IPostRepository
     public async Task<Post> CreateAsync(Post post)
     {
         await _context.Posts.AddAsync(post);
+        await _context.SaveChangesAsync();
         return post;
     }
 
@@ -33,7 +34,7 @@ public class PostRepository : IPostRepository
     {
         post.LastModified = DateTime.UtcNow;
         _context.Posts.Update(post);
-        await Task.CompletedTask;
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(string id)
@@ -45,6 +46,7 @@ public class PostRepository : IPostRepository
             post.IsDeleted = true;
             post.IsActive = false;
             _context.Posts.Update(post);
+            await _context.SaveChangesAsync();
         }
     }
 
@@ -125,6 +127,7 @@ public class PostRepository : IPostRepository
         }
         
         _context.Posts.UpdateRange(posts);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAllByPetIdAsync(string petId)
@@ -140,6 +143,7 @@ public class PostRepository : IPostRepository
         }
         
         _context.Posts.UpdateRange(posts);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<int> GetPostCountByUserAsync(string userId)

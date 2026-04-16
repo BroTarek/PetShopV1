@@ -18,6 +18,7 @@ public class AdoptionRequestRepository : IAdoptionRequestRepository
     public async Task<AdoptionRequest> CreateAsync(AdoptionRequest request)
     {
         await _context.AdoptionRequests.AddAsync(request);
+        await _context.SaveChangesAsync();
         return request;
     }
 
@@ -33,7 +34,7 @@ public class AdoptionRequestRepository : IAdoptionRequestRepository
     public async Task UpdateAsync(AdoptionRequest request)
     {
         _context.AdoptionRequests.Update(request);
-        await Task.CompletedTask;
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(string id)
@@ -42,6 +43,7 @@ public class AdoptionRequestRepository : IAdoptionRequestRepository
         if (request != null)
         {
             _context.AdoptionRequests.Remove(request);
+            await _context.SaveChangesAsync();
         }
     }
 
