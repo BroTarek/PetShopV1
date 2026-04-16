@@ -1,1 +1,0 @@
-getAllUsersPosts(string userId);
