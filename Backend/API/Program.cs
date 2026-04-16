@@ -64,7 +64,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled because inside Docker, SSL termination is handled by proxy
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
