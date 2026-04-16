@@ -35,7 +35,7 @@ public class AuthService
             Email = request.Email,
             Password = HashPassword(request.Password),
             Role = request.Role,
-            AccountStatus = AccountStatus.Pending,
+            AccountStatus = AccountStatus.Approved, // Auto-approve for easier testing during dev
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -97,6 +97,7 @@ public class AuthService
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };

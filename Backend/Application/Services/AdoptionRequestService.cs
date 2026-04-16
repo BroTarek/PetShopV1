@@ -1,6 +1,8 @@
 using PetShop.BackendV2.Domain.Entities;
 using PetShop.BackendV2.Domain.Enums;
 using PetShop.BackendV2.Domain.Interfaces.Repositories;
+using PetShop.BackendV2.Application.Interfaces.Services;
+
 namespace PetShop.BackendV2.Application.Services;
 
 public class AdoptionRequestService
@@ -8,15 +10,18 @@ public class AdoptionRequestService
     private readonly IAdoptionRequestRepository _adoptionRequestRepo;
     private readonly IPetRepository _petRepo;
     private readonly IUserRepository _userRepo;
+    private readonly IAdoptionNotificationService _notificationService;
 
     public AdoptionRequestService(
         IAdoptionRequestRepository adoptionRequestRepo,
         IPetRepository petRepo,
-        IUserRepository userRepo)
+        IUserRepository userRepo,
+        IAdoptionNotificationService notificationService)
     {
         _adoptionRequestRepo = adoptionRequestRepo;
         _petRepo = petRepo;
         _userRepo = userRepo;
+        _notificationService = notificationService;
     }
 
     public async Task<AdoptionRequest> InitiateAdoptionRequestAsync(
@@ -85,7 +90,8 @@ public class AdoptionRequestService
             initiator.AdoptionRequestsInitiated.Add(adoptionRequest);
             receiver.AdoptionRequestsReceived.Add(adoptionRequest);
             
-            // No need to call _userRepo.UpdateAsync. EF Core automatically tracked the FKs above.
+            // 7. Send real-time notifications via Service
+            await _notificationService.NotifyNewRequestAsync(adoptionRequest, initiator, receiver, pet);
             
             return adoptionRequest;
         }
@@ -138,14 +144,12 @@ public class AdoptionRequestService
             adoptionRequest.Status = AdoptionStatus.Approved;
             adoptionRequest.DecisionDate = DateTime.UtcNow;
             
-            // 8. DO NOT remove request from users' collections. It should remain in their history.
-            // initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
-            // receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
-            
-            // 9. Save all changes
+            // 8. Save all changes
             await _petRepo.UpdateAsync(pet);
-            // EF Core tracking automatically processes the Pet updates. Calling UpdateAsync on the whole User object breaks relationships.
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
+            
+            // 9. Send real-time notifications via Service
+            await _notificationService.NotifyRequestAcceptedAsync(adoptionRequest, initiator, receiver, pet);
             
             return adoptionRequest;
         }
@@ -171,20 +175,19 @@ public class AdoptionRequestService
             
             var initiator = await _userRepo.GetByIdAsync(adoptionRequest.InitiatorId);
             var receiver = await _userRepo.GetByIdAsync(adoptionRequest.ReceiverId);
+            var pet = await _petRepo.GetByIdAsync(adoptionRequest.PetId);
             
-            if (initiator == null || receiver == null)
-                throw new KeyNotFoundException("User not found");
+            if (initiator == null || receiver == null || pet == null)
+                throw new KeyNotFoundException("User or Pet not found");
             
             // Update status
             adoptionRequest.Status = AdoptionStatus.Rejected;
             adoptionRequest.DecisionDate = DateTime.UtcNow;
             
-            // DO NOT Remove from users' collections so it stays in history
-            // initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
-            // receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
-            
-            // Do not update the user graph, adoption request status is all that changed in DB
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
+            
+            // Send real-time notifications via Service
+            await _notificationService.NotifyRequestRejectedAsync(adoptionRequest, initiator, receiver, pet);
             
             return adoptionRequest;
         }
@@ -205,26 +208,24 @@ public class AdoptionRequestService
             if (adoptionRequest == null)
                 throw new KeyNotFoundException($"Adoption request with ID {requestId} not found");
             
-            // Only initiator can cancel, and only if pending
             if (adoptionRequest.Status != AdoptionStatus.Pending)
                 throw new InvalidOperationException($"Cannot cancel request that is already {adoptionRequest.Status}");
             
             var initiator = await _userRepo.GetByIdAsync(adoptionRequest.InitiatorId);
             var receiver = await _userRepo.GetByIdAsync(adoptionRequest.ReceiverId);
+            var pet = await _petRepo.GetByIdAsync(adoptionRequest.PetId);
             
-            if (initiator == null || receiver == null)
-                throw new KeyNotFoundException("User not found");
+            if (initiator == null || receiver == null || pet == null)
+                throw new KeyNotFoundException("User or Pet not found");
             
             // Soft delete - mark as cancelled instead of deleting
             adoptionRequest.Status = AdoptionStatus.Cancelled;
             adoptionRequest.DecisionDate = DateTime.UtcNow;
             
-            // DO NOT Remove from users' collections so it stays in history
-            // initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
-            // receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
-            
-            // Do not update the user graph, adoption request status is all that changed in DB
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
+            
+            // Send real-time notifications via Service
+            await _notificationService.NotifyRequestCancelledAsync(adoptionRequest, initiator, receiver, pet);
             
             return adoptionRequest;
         }

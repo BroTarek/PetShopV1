@@ -1,3 +1,7 @@
+using PetShop.BackendV2.Domain.Enums;
+
+namespace PetShop.BackendV2.Application.DTO;
+
 // Search Criteria DTO
 public class PetSearchCriteria
 {
