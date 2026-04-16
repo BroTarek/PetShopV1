@@ -1,0 +1,1 @@
+getAllFavouritePostsOfUser(string userId);
