@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: 'Your_Strong_Password_123!'
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      # Inject Docker specific Connection String targeting 'db' service
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=PetShopDb;User Id=sa;Password=Your_Strong_Password_123!;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - ASPNETCORE_HTTP_PORTS=80
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+
+volumes:
+  sqlserverdata:

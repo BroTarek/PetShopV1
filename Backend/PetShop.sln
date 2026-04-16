@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Domain", "Domain\PetShop.Domain.csproj", "{D1B2A10A-375C-4318-A396-D7E3036C8BBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Application", "Application\PetShop.Application.csproj", "{C44DDC0D-0144-4821-B341-DA168019E7A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Infrastructure", "Infrastructure\PetShop.Infrastructure.csproj", "{A6DC8CD2-261F-43A2-850A-A3EADAFB35EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.API", "API\PetShop.API.csproj", "{B8D461D4-0AEC-4A82-8AC6-B7E032C237F0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1B2A10A-375C-4318-A396-D7E3036C8BBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1B2A10A-375C-4318-A396-D7E3036C8BBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1B2A10A-375C-4318-A396-D7E3036C8BBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1B2A10A-375C-4318-A396-D7E3036C8BBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C44DDC0D-0144-4821-B341-DA168019E7A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C44DDC0D-0144-4821-B341-DA168019E7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44DDC0D-0144-4821-B341-DA168019E7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C44DDC0D-0144-4821-B341-DA168019E7A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6DC8CD2-261F-43A2-850A-A3EADAFB35EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6DC8CD2-261F-43A2-850A-A3EADAFB35EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6DC8CD2-261F-43A2-850A-A3EADAFB35EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6DC8CD2-261F-43A2-850A-A3EADAFB35EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8D461D4-0AEC-4A82-8AC6-B7E032C237F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8D461D4-0AEC-4A82-8AC6-B7E032C237F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8D461D4-0AEC-4A82-8AC6-B7E032C237F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8D461D4-0AEC-4A82-8AC6-B7E032C237F0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
