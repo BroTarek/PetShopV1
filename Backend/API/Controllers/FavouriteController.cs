@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetShop.BackendV2.Application.Services;
 using PetShop.BackendV2.Domain.Entities.ViewModels;
+using PetShop.BackendV2.Application.ViewModels;
 
 namespace PetShop.BackendV2.API.Controllers;
 
@@ -210,7 +211,7 @@ public class FavouriteController : ControllerBase
                 UserName = $"{f.User?.FirstName} {f.User?.LastName}",
                 PostId = f.PostId,
                 PetName = f.Post?.Pet?.Name ?? "Unknown",
-                PetImageUrl = f.Post?.Pet?.ImageUrl ?? string.Empty,
+                PetImageUrl = f.Post?.Pet?.Images.FirstOrDefault() ?? string.Empty,
                 FavouritedAt = f.CreatedAt,
                 PostTitle = f.Post?.Title ?? string.Empty,
                 PostContent = f.Post?.Content ?? string.Empty

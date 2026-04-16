@@ -2,8 +2,8 @@ namespace PetShop.BackendV2.Domain.Enums;
 
 public enum AdoptionStatus
 {
-    PENDING,
-    ACCEPTED,
-    REJECTED,
-    CANCELLED
+    Pending,
+    Approved,
+    Rejected,
+    Cancelled
 }

@@ -1,4 +1,5 @@
 using PetShop.BackendV2.Domain.Entities;
+using PetShop.BackendV2.Domain.Enums;
 
 namespace PetShop.BackendV2.Domain.Interfaces.Repositories;
 

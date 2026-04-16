@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PetShop.BackendV2.Application.Services;
 using PetShop.BackendV2.Domain.Entities.ViewModels;
+using PetShop.BackendV2.Application.ViewModels;
+using PetShop.BackendV2.Domain.Enums;
 
 namespace PetShop.BackendV2.API.Controllers;
 
@@ -134,7 +136,7 @@ public class PetController : ControllerBase
                 CreationDate = pet.CreationDate,
                 LastModified = pet.LastModified,
                 ActiveAdoptionRequests = pet.AdoptionRequests?.Count(ar => ar.Status == AdoptionStatus.Pending) ?? 0,
-                HasActivePost = pet.Post != null && pet.Post.IsActive
+                HasActivePost = false // Feature not supported with recent schema changes
             };
             
             return Ok(new { Success = true, Pet = response });

@@ -18,42 +18,82 @@ public class AdminService
     }
 
 
-    
-    public async Task<User> ActivateUserAsync(string userId)
+    private async Task<User?> UpdateUserStatusAsync(string userId, AccountStatus status)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user != null)
+        {
+            user.AccountStatus = status;
+            await _userRepository.UpdateAsync(user);
+        }
+        return user;
+    }
+
+    public async Task<User?> ActivateUserAsync(string userId)
     {
         return await UpdateUserStatusAsync(userId, AccountStatus.Approved);
     }
 
-    public async Task<User> DeactivateUserAsync(string userId)
+    public async Task<User?> DeactivateUserAsync(string userId)
     {
         return await UpdateUserStatusAsync(userId, AccountStatus.Rejected);
     }
 
-    
-    
-    public async Task<User> ApproveUserCreation(User user)
+    public async Task<User?> ApproveUserCreation(string userId)
     {
-        return await _userRepository.updateAccountStatus(user, AccountStatus.APPROVED);
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user != null) {
+            user.AccountStatus = AccountStatus.Approved;
+            await _userRepository.UpdateAsync(user);
+        }
+        return user;
     }
 
-    public async Task<User> RejectUserCreation(User user)
+    public async Task<User?> RejectUserCreation(string userId)
     {
-        return await _userRepository.updateAccountStatus(user, AccountStatus.REJECTED);
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user != null) {
+            user.AccountStatus = AccountStatus.Rejected;
+            await _userRepository.UpdateAsync(user);
+        }
+        return user;
     }
     
-    public async Task<User> SuspendUserAsync(string userId)
+    public async Task<User?> SuspendUserAsync(string userId)
     {
         return await UpdateUserStatusAsync(userId, AccountStatus.Suspended);
     }
 
-    public async Task<User?> ApprovePostCreation(Post post)
+    public async Task<Post?> ApprovePostCreation(string postId)
     {
-        return await _userRepository.updatePostStatus(post, PostStatus.APPROVED);
+        var post = await _postRepository.GetByIdAsync(postId);
+        if (post != null) {
+            post.IsActive = true;
+            await _postRepository.UpdateAsync(post);
+        }
+        return post;
     }
 
-    public async Task<User?> RejectPostCreation(Post post)
+    public async Task<Post?> RejectPostCreation(string postId)
     {
-        return await _userRepository.updatePostStatus(post, PostStatus.REJECTED);
+        var post = await _postRepository.GetByIdAsync(postId);
+        if (post != null) {
+            post.IsActive = false;
+            post.IsDeleted = true;
+            await _postRepository.UpdateAsync(post);
+        }
+        return post;
+    }
+
+    public async Task<object> GetDashboardStatisticsAsync()
+    {
+        var users = await _userRepository.GetAllUsersAsync();
+        var posts = await _postRepository.GetAllPostsAsync();
+        
+        return new {
+            TotalUsers = users.Count,
+            TotalPosts = posts.Count
+        };
     }
 
     public async Task<User?> GetByEmailAsync(string email)
@@ -71,14 +111,13 @@ public class AdminService
         return await _postRepository.GetAllPendingPosts();
     }
 
-    public async Task<List<Post>> DeletePostAsync(string postId)
+    public async Task DeletePostAsync(string postId)
     {
-        return await _userRepository.DeletePostAsync(postId);
+        await _postRepository.DeleteAsync(postId);
     }
 
-    public async Task<List<Post>> DeleteUserAsync(string userId)
+    public async Task DeleteUserAsync(string userId)
     {
-        return await _userRepository.DeleteUserAsync(userId);
+        await _userRepository.DeleteAsync(userId);
     }
-    
 }

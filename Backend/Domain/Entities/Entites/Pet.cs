@@ -17,10 +17,11 @@ public class Pet
     public List<string> Images { get; set; } = new();
     public PetStatus Status { get; set; }
     public DateTime CreationDate { get; set; }
+    public DateTime LastModified { get; set; }
 
     // Associations
     public string OwnerId { get; set; } = string.Empty;
-    public PetOwner Owner { get; set; } = null!;
+    public User Owner { get; set; } = null!;
     
     // All adoption requests for this pet
     public virtual ICollection<AdoptionRequest> AdoptionRequests { get; set; }

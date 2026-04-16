@@ -15,31 +15,37 @@ public class AdminRepository : IAdminRepository
         _context = context;
     }
 
-
-
-        
     public async Task<User> ApproveUserCreation(User user)
     {
-        user.Status = AccountStatus.APPROVED;
-        return await UpdateAsync(user);
+        user.AccountStatus = AccountStatus.Approved;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+        return user;
     }
 
     public async Task<User> RejectUserCreation(User user)
     {
-        user.Status = AccountStatus.REJECTED;
-        return await UpdateAsync(user);
+        user.AccountStatus = AccountStatus.Rejected;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+        return user;
     }
 
     public async Task<User?> ApprovePostCreation(Post post)
     {
-        post.Status = PostStatus.APPROVED;
-        return await UpdateAsync(post);
+        post.IsActive = true;
+        _context.Posts.Update(post);
+        await _context.SaveChangesAsync();
+        return null; // The old code returned User?, so leaving it as null
     }
 
     public async Task<User?> RejectPostCreation(Post post)
     {
-        post.Status = PostStatus.REJECTED;
-        return await UpdateAsync(post);
+        post.IsActive = false;
+        post.IsDeleted = true;
+        _context.Posts.Update(post);
+        await _context.SaveChangesAsync();
+        return null;
     }
 
     public async Task<User?> GetByEmailAsync(string email)
@@ -49,12 +55,12 @@ public class AdminRepository : IAdminRepository
 
     public async Task<List<User>> GetAllPendingUsers()
     {
-        return await _context.Users.Where(u => u.Status == AccountStatus.PENDING).ToListAsync();
+        return await _context.Users.Where(u => u.AccountStatus == AccountStatus.Pending).ToListAsync();
     }
 
     public async Task<List<Post>> GetAllPendingPosts()
     {
-        return await _context.Posts.Where(p => p.Status == PostStatus.PENDING).ToListAsync();
+        return await _context.Posts.Where(p => !p.IsActive && !p.IsDeleted).ToListAsync();
     }
 
     public async Task<List<Post>> DeletePostAsync(string postId)
@@ -78,7 +84,4 @@ public class AdminRepository : IAdminRepository
         }
         return await _context.Posts.ToListAsync();
     }
-
-
-
 }

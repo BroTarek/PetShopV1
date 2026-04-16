@@ -1,3 +1,5 @@
+using PetShop.BackendV2.Application.DTO;
+using PetShop.BackendV2.Application.ViewModels;
 using PetShop.BackendV2.Domain.Entities;
 using PetShop.BackendV2.Domain.Enums;
 using PetShop.BackendV2.Domain.Interfaces.Repositories;
@@ -192,3 +194,4 @@ public class UserService
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
 }
+

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using PetShop.BackendV2.Application.DTO;
 using PetShop.BackendV2.Application.Services;
 using PetShop.BackendV2.Domain.Entities.ViewModels;
+using PetShop.BackendV2.Application.ViewModels;
 
 namespace PetShop.BackendV2.API.Controllers;
 

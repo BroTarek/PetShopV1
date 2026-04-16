@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PetShop.BackendV2.Domain.Entities.ViewModels;
-using PetShop.BackendV2.Domain.Interfaces.VMRepo;
+using PetShop.BackendV2.Application.Interfaces.VMRepos;
 using PetShop.BackendV2.Infrastructure.Data;
+using PetShop.BackendV2.Domain.Enums;
 
 namespace PetShop.BackendV2.Infrastructure.VMRepos;
 
@@ -23,7 +24,7 @@ public class UserAdoptionVMRepo : IUserAdoptionVMRepo
             {
                 RequestId = ar.Id,
                 PetName = ar.Pet.Name,
-                PetImageUrl = ar.Pet.ImageUrl ?? string.Empty,
+                PetImageUrl = ar.Pet.Images.FirstOrDefault() ?? string.Empty,
                 InitiatorName = ar.Initiator.FirstName + " " + ar.Initiator.LastName,
                 InitiatorEmail = ar.Initiator.Email,
                 ReceiverName = ar.Receiver.FirstName + " " + ar.Receiver.LastName,
@@ -44,7 +45,7 @@ public class UserAdoptionVMRepo : IUserAdoptionVMRepo
             {
                 RequestId = ar.Id,
                 PetName = ar.Pet.Name,
-                PetImageUrl = ar.Pet.ImageUrl ?? string.Empty,
+                PetImageUrl = ar.Pet.Images.FirstOrDefault() ?? string.Empty,
                 InitiatorName = ar.Initiator.FirstName + " " + ar.Initiator.LastName,
                 InitiatorEmail = ar.Initiator.Email,
                 ReceiverName = ar.Receiver.FirstName + " " + ar.Receiver.LastName,
@@ -64,7 +65,7 @@ public class UserAdoptionVMRepo : IUserAdoptionVMRepo
             {
                 RequestId = ar.Id,
                 PetName = ar.Pet.Name,
-                PetImageUrl = ar.Pet.ImageUrl ?? string.Empty,
+                PetImageUrl = ar.Pet.Images.FirstOrDefault() ?? string.Empty,
                 InitiatorName = ar.Initiator.FirstName + " " + ar.Initiator.LastName,
                 InitiatorEmail = ar.Initiator.Email,
                 ReceiverName = ar.Receiver.FirstName + " " + ar.Receiver.LastName,
@@ -85,7 +86,7 @@ public class UserAdoptionVMRepo : IUserAdoptionVMRepo
             {
                 RequestId = ar.Id,
                 PetName = ar.Pet.Name,
-                PetImageUrl = ar.Pet.ImageUrl ?? string.Empty,
+                PetImageUrl = ar.Pet.Images.FirstOrDefault() ?? string.Empty,
                 InitiatorName = ar.Initiator.FirstName + " " + ar.Initiator.LastName,
                 InitiatorEmail = ar.Initiator.Email,
                 ReceiverName = ar.Receiver.FirstName + " " + ar.Receiver.LastName,

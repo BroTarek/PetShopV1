@@ -16,6 +16,7 @@ public interface IReviewRepository
     Task<Review?> GetReviewByReviewerAndRevieweeAsync(string reviewerId, string revieweeId);
    
    Task<int> GetReviewCountForUserAsync(string userId);
+    Task<double> GetAverageRatingForUserAsync(string userId);
     
     // Validation
     Task<bool> UserHasReviewedUserAsync(string reviewerId, string revieweeId);

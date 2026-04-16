@@ -1,9 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using PetShop.BackendV2.Domain.Entities;
 using PetShop.BackendV2.Domain.Enums;
 using PetShop.BackendV2.Domain.Interfaces.Repositories;
-using PetShop.BackendV2.Infrastructure.Data;
-
 namespace PetShop.BackendV2.Application.Services;
 
 public class AdoptionRequestService
@@ -11,18 +8,15 @@ public class AdoptionRequestService
     private readonly IAdoptionRequestRepository _adoptionRequestRepo;
     private readonly IPetRepository _petRepo;
     private readonly IUserRepository _userRepo;
-    private readonly AppDbContext _context;
 
     public AdoptionRequestService(
         IAdoptionRequestRepository adoptionRequestRepo,
         IPetRepository petRepo,
-        IUserRepository userRepo,
-        AppDbContext context)
+        IUserRepository userRepo)
     {
         _adoptionRequestRepo = adoptionRequestRepo;
         _petRepo = petRepo;
         _userRepo = userRepo;
-        _context = context;
     }
 
     public async Task<AdoptionRequest> InitiateAdoptionRequestAsync(
@@ -41,8 +35,6 @@ public class AdoptionRequestService
         if (initiatorId == receiverId)
             throw new InvalidOperationException("Cannot request adoption from yourself");
 
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        
         try
         {
             // 1. Validate pet exists and is available
@@ -96,15 +88,10 @@ public class AdoptionRequestService
             await _userRepo.UpdateAsync(initiator);
             await _userRepo.UpdateAsync(receiver);
             
-            // 7. Save all changes atomically
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-            
             return adoptionRequest;
         }
         catch
         {
-            await transaction.RollbackAsync();
             throw;
         }
     }
@@ -114,8 +101,6 @@ public class AdoptionRequestService
         if (string.IsNullOrEmpty(requestId))
             throw new ArgumentException("Request ID is required");
 
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        
         try
         {
             // 1. Get the adoption request with all related data
@@ -164,14 +149,10 @@ public class AdoptionRequestService
             await _userRepo.UpdateAsync(receiver);
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
             
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-            
             return adoptionRequest;
         }
         catch
         {
-            await transaction.RollbackAsync();
             throw;
         }
     }
@@ -181,8 +162,6 @@ public class AdoptionRequestService
         if (string.IsNullOrEmpty(requestId))
             throw new ArgumentException("Request ID is required");
 
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        
         try
         {
             var adoptionRequest = await _adoptionRequestRepo.GetByIdAsync(requestId);
@@ -210,14 +189,10 @@ public class AdoptionRequestService
             await _userRepo.UpdateAsync(receiver);
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
             
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-            
             return adoptionRequest;
         }
         catch
         {
-            await transaction.RollbackAsync();
             throw;
         }
     }
@@ -227,8 +202,6 @@ public class AdoptionRequestService
         if (string.IsNullOrEmpty(requestId))
             throw new ArgumentException("Request ID is required");
 
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        
         try
         {
             var adoptionRequest = await _adoptionRequestRepo.GetByIdAsync(requestId);
@@ -257,14 +230,10 @@ public class AdoptionRequestService
             await _userRepo.UpdateAsync(receiver);
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
             
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-            
             return adoptionRequest;
         }
         catch
         {
-            await transaction.RollbackAsync();
             throw;
         }
     }

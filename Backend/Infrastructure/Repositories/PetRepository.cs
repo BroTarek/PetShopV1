@@ -28,7 +28,6 @@ public class PetRepository : IPetRepository
         return await _context.Pets
             .Include(p => p.Owner)
             .Include(p => p.AdoptionRequests)
-            .Include(p => p.Post)
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 

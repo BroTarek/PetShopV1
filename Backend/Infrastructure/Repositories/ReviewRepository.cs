@@ -105,4 +105,17 @@ public class ReviewRepository : IReviewRepository
         
         _context.Reviews.RemoveRange(reviews);
     }
+    
+    public async Task<double> GetAverageRatingForUserAsync(string userId)
+    {
+        var ratings = await _context.Reviews
+            .Where(r => r.RevieweeId == userId)
+            .Select(r => r.Rating)
+            .ToListAsync();
+
+        if (!ratings.Any())
+            return 0;
+
+        return ratings.Average();
+    }
 }

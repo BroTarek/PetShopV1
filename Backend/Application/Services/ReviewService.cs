@@ -1,3 +1,5 @@
+using PetShop.BackendV2.Application.DTO;
+using PetShop.BackendV2.Application.ViewModels;
 using PetShop.BackendV2.Domain.Entities;
 using PetShop.BackendV2.Domain.Interfaces.Repositories;
 

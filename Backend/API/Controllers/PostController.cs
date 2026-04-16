@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetShop.BackendV2.Application.Services;
 using PetShop.BackendV2.Domain.Entities.ViewModels;
+using PetShop.BackendV2.Application.ViewModels;
 
 namespace PetShop.BackendV2.API.Controllers;
 
@@ -119,7 +120,7 @@ public class PostController : ControllerBase
                 Content = post.Content,
                 PetId = post.PetId,
                 PetName = post.Pet?.Name ?? "Unknown",
-                PetImageUrl = post.Pet?.ImageUrl ?? string.Empty,
+                PetImageUrl = post.Pet?.Images.FirstOrDefault() ?? string.Empty,
                 PetBreed = post.Pet?.Breed ?? string.Empty,
                 UserId = post.UserId,
                 UserName = $"{post.User?.FirstName} {post.User?.LastName}",
@@ -157,7 +158,7 @@ public class PostController : ControllerBase
                 Content = post.Content,
                 PetId = post.PetId,
                 PetName = post.Pet?.Name ?? "Unknown",
-                PetImageUrl = post.Pet?.ImageUrl ?? string.Empty,
+                PetImageUrl = post.Pet?.Images.FirstOrDefault() ?? string.Empty,
                 UserId = post.UserId,
                 UserName = $"{post.User?.FirstName} {post.User?.LastName}",
                 CreationDate = post.CreationDate,
@@ -236,7 +237,7 @@ public class PostController : ControllerBase
                 Description = post.Description,
                 PetId = post.PetId,
                 PetName = post.Pet?.Name ?? "Unknown",
-                PetImageUrl = post.Pet?.ImageUrl ?? string.Empty,
+                PetImageUrl = post.Pet?.Images.FirstOrDefault() ?? string.Empty,
                 UserId = post.UserId,
                 UserName = $"{post.User?.FirstName} {post.User?.LastName}",
                 CreationDate = post.CreationDate,

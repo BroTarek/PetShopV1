@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PetShop.BackendV2.Domain.Interfaces.Repositories;
 using PetShop.BackendV2.Domain.Interfaces.Services;
-using PetShop.BackendV2.Domain.Interfaces.VMRepos;
+using PetShop.BackendV2.Application.Interfaces.VMRepos;
 using PetShop.BackendV2.Infrastructure.Repositories;
 using PetShop.BackendV2.Infrastructure.Services;
 using PetShop.BackendV2.Infrastructure.VMRepos;
@@ -14,7 +14,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IAdoptionRequestRepository, AdoptionRequestRepository>();
         services.AddScoped<IUserAdoptionVMRepo, UserAdoptionVMRepo>();
-        services.AddScoped<IFavouriteRepository, FavouritesRepository>();
+        services.AddScoped<IFavouriteRepository, FavouriteRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();

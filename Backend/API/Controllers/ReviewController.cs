@@ -220,12 +220,3 @@ public class ReviewController : ControllerBase
 
 
 }
-
-// Extension method to get review count (add to ReviewService if missing)
-public partial class ReviewService
-{
-    public async Task<int> GetReviewCountForUserAsync(string userId)
-    {
-        return await _reviewRepository.GetReviewCountForUserAsync(userId);
-    }
-}

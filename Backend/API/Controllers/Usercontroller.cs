@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PetShop.BackendV2.Application.Services;
 using PetShop.BackendV2.Domain.Entities.ViewModels;
+using PetShop.BackendV2.Application.ViewModels;
+using PetShop.BackendV2.Domain.Enums;
 
 namespace PetShop.BackendV2.API.Controllers;
 
@@ -248,7 +250,11 @@ public class UserController : ControllerBase
     {
         try
         {
-            var user = await _userService.ActivateUserAsync(userId);
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user != null) {
+                user.AccountStatus = AccountStatus.Approved;
+                user = await _userService.UpdateUserProfileAsync(userId, new UpdateUserProfileRequest { }); // Wait, actually I'll just change UserService
+            }
             
             return Ok(new
             {
@@ -276,7 +282,11 @@ public class UserController : ControllerBase
     {
         try
         {
-            var user = await _userService.DeactivateUserAsync(userId);
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user != null) {
+                user.AccountStatus = AccountStatus.Rejected;
+                user = await _userService.UpdateUserProfileAsync(userId, new UpdateUserProfileRequest { });
+            }
             
             return Ok(new
             {

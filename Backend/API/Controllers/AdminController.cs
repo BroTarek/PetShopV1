@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PetShop.BackendV2.Application.Services;
 using PetShop.BackendV2.Domain.Entities;
 using PetShop.BackendV2.Domain.Entities.ViewModels;
+using PetShop.BackendV2.Application.ViewModels;
 
 namespace PetShop.BackendV2.API.Controllers;
 
@@ -213,7 +215,7 @@ public class AdminController : ControllerBase
                 OwnerName = $"{post.User?.FirstName} {post.User?.LastName}",
                 OwnerEmail = post.User?.Email ?? string.Empty,
                 CreationDate = post.CreationDate,
-                Status = post.Status?.ToString() ?? "Pending",
+                Status = post.IsActive ? "Approved" : "Pending",
                 IsActive = post.IsActive
             });
             
@@ -246,7 +248,7 @@ public class AdminController : ControllerBase
                 Message = "Post approved successfully",
                 PostId = post.Id,
                 Title = post.Title,
-                Status = post.Status?.ToString() ?? "Approved"
+                Status = post.IsActive ? "Approved" : "Pending"
             });
         }
         catch (KeyNotFoundException ex)
@@ -279,7 +281,7 @@ public class AdminController : ControllerBase
                 Message = "Post rejected successfully",
                 PostId = post.Id,
                 Title = post.Title,
-                Status = post.Status?.ToString() ?? "Rejected"
+                Status = post.IsActive ? "Approved" : "Rejected"
             });
         }
         catch (KeyNotFoundException ex)

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PetShop.BackendV2.Application.Services;
-using PetShop.BackendV2.Domain.Interfaces.VMRepo;
+using PetShop.BackendV2.Application.Interfaces.VMRepos;
 
 namespace PetShop.BackendV2.API.Controllers;
 

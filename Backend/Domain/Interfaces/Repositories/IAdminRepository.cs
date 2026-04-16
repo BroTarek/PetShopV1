@@ -2,7 +2,7 @@ using PetShop.BackendV2.Domain.Entities;
 
 namespace PetShop.BackendV2.Domain.Interfaces.Repositories;
 
-public interface IUserRepository
+public interface IAdminRepository
 {
     // Basic CRUD Operations
     Task<User> ApproveUserCreation(User user);
