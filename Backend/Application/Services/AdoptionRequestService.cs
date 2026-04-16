@@ -85,8 +85,7 @@ public class AdoptionRequestService
             initiator.AdoptionRequestsInitiated.Add(adoptionRequest);
             receiver.AdoptionRequestsReceived.Add(adoptionRequest);
             
-            await _userRepo.UpdateAsync(initiator);
-            await _userRepo.UpdateAsync(receiver);
+            // No need to call _userRepo.UpdateAsync. EF Core automatically tracked the FKs above.
             
             return adoptionRequest;
         }
@@ -139,14 +138,13 @@ public class AdoptionRequestService
             adoptionRequest.Status = AdoptionStatus.Approved;
             adoptionRequest.DecisionDate = DateTime.UtcNow;
             
-            // 8. Remove request from both users' collections
-            initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
-            receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
+            // 8. DO NOT remove request from users' collections. It should remain in their history.
+            // initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
+            // receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
             
             // 9. Save all changes
             await _petRepo.UpdateAsync(pet);
-            await _userRepo.UpdateAsync(initiator);
-            await _userRepo.UpdateAsync(receiver);
+            // EF Core tracking automatically processes the Pet updates. Calling UpdateAsync on the whole User object breaks relationships.
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
             
             return adoptionRequest;
@@ -181,12 +179,11 @@ public class AdoptionRequestService
             adoptionRequest.Status = AdoptionStatus.Rejected;
             adoptionRequest.DecisionDate = DateTime.UtcNow;
             
-            // Remove from both users' collections
-            initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
-            receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
+            // DO NOT Remove from users' collections so it stays in history
+            // initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
+            // receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
             
-            await _userRepo.UpdateAsync(initiator);
-            await _userRepo.UpdateAsync(receiver);
+            // Do not update the user graph, adoption request status is all that changed in DB
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
             
             return adoptionRequest;
@@ -222,12 +219,11 @@ public class AdoptionRequestService
             adoptionRequest.Status = AdoptionStatus.Cancelled;
             adoptionRequest.DecisionDate = DateTime.UtcNow;
             
-            // Remove from both users' collections
-            initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
-            receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
+            // DO NOT Remove from users' collections so it stays in history
+            // initiator.AdoptionRequestsInitiated?.Remove(adoptionRequest);
+            // receiver.AdoptionRequestsReceived?.Remove(adoptionRequest);
             
-            await _userRepo.UpdateAsync(initiator);
-            await _userRepo.UpdateAsync(receiver);
+            // Do not update the user graph, adoption request status is all that changed in DB
             await _adoptionRequestRepo.UpdateAsync(adoptionRequest);
             
             return adoptionRequest;
